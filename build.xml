@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<project default="dist" basedir=".">
+    <description>ibator</description>
+	<property name="generated.source.dir" value="${basedir}" />
+    <property name="src.dir"    value="src" />
+	<property name="build.dir"  value="bin" />
+    <property name="dist.dir"   value="dist" />
+	<property name="lib.dir"   value="lib" />
+
+    <!-- classpath definition -->
+    <path id="build-classpath">
+        <fileset dir="${lib.dir}">
+            <include name="**/*.jar" />
+        </fileset>
+    </path>
+
+    <!-- clean all built class file and config file -->
+    <target name="clean">
+        <delete dir="${build.dir}" />
+    </target>
+
+    <!-- make all needed dirs -->
+    <target name="init">
+    	<delete dir="${src.dir}/main/java/cn/xyz/ins/server/dao" />
+    	<delete dir="${src.dir}/main/java/cn/xyz/ins/server/model" />
+    	<mkdir dir="${src.dir}/main/java/cn/xyz/ins/server/dao/impl" />
+    	<mkdir dir="${src.dir}/main/java/cn/xyz/ins/server/model" />
+    </target>
+
+    <!-- compile all java source files -->
+    <target name="build" depends="init" description="compile the source files">
+        <mkdir dir="${build.dir}" />
+        <!-- for product use, set: optimize="on" debug="off" -->
+        <javac destdir="${build.dir}" target="1.5" encoding="utf-8" deprecation="on" debug="on" debuglevel="lines,vars,source">
+            <src path="${src.dir}/main/java" />
+        	<src path="${src.dir}/main/resources" />
+            <classpath refid="build-classpath"/>
+        </javac>
+        <!-- copy non-java source files to build dir -->
+        <copy todir="${build.dir}">
+            <fileset dir="${src.dir}/main/java" excludes="**/*.java" />
+        	<fileset dir="${src.dir}/main/resources" excludes="**/*.java" />
+        </copy>
+    </target>
+    <target name="dist" depends="build" description="make jar">
+        <delete file="${dist.dir}/ibator.jar" />
+        <mkdir dir="${dist.dir}" />
+        <jar destfile="${dist.dir}/ibator.jar">
+            <fileset dir="${build.dir}">
+                <include name="**/*.*" />
+            </fileset>
+            <fileset dir="${src.dir}/main/java">
+                <include name="**/*.java" />
+            </fileset>
+        </jar>
+    </target>
+	
+	<target name="genfiles" description="Generate the files">
+		<taskdef name="ibator" classname="org.apache.ibatis.ibator.ant.IbatorAntTask" classpath="${dist.dir}/ibator.jar" />
+		<ibator overwrite="true" configfile="ibatorConfig.xml" verbose="false">
+			<propertyset>
+				<propertyref name="generated.source.dir" />
+			</propertyset>
+		</ibator>
+	</target>
+</project>

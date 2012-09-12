@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Ant-Version: Apache Ant 1.7.1
+Created-By: 1.5.0_17-b04 (Sun Microsystems Inc.)
+Main-Class: org.apache.ibatis.ibator.api.IbatorRunner
+Specification-Title: Apache iBATIS Ibator
+Specification-Version: 1.2.1
+Specification-Vendor: The Apache Software Foundation
+
